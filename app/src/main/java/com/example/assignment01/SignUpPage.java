@@ -3,10 +3,14 @@ package com.example.assignment01;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
@@ -32,8 +36,22 @@ public class SignUpPage extends AppCompatActivity {
         mbtnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                addUser();
                 startActivity(new Intent(SignUpPage.this, MainActivity.class));
             }
         });
+    }
+
+    private void addUser() {
+        User u = new User(signupUsername.getText().toString(), signupPassword.getText().toString(),
+                signupEmail.getText().toString(), signupPhone.getText().toString());
+        Toast.makeText(this, u.toString(), Toast.LENGTH_SHORT).show();
+        /*
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(userList);
+        editor.putString("user list", json);
+        editor.apply(); */
     }
 }
