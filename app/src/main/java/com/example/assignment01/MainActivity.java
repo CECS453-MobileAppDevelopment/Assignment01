@@ -8,8 +8,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
+    ArrayList<User> userList;
     private EditText loginUsername, loginPassword;
     private Button mbtnSignUp, mbtnLogin;
 
@@ -18,10 +21,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        userList = new ArrayList<>();
         loginUsername = findViewById(R.id.login_username);
         loginPassword = findViewById(R.id.login_password);
-
         mbtnSignUp = findViewById(R.id.btn_signup);
+        mbtnLogin = findViewById(R.id.btn_login);
+
         mbtnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -29,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mbtnLogin = findViewById(R.id.btn_login);
         mbtnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
