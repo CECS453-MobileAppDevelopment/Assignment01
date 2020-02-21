@@ -13,7 +13,6 @@
         android:layout_width="380dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        app:hintTextAppearance="@style/hintLabel"
         app:errorEnabled="true">
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
@@ -27,7 +26,6 @@
         android:layout_width="380dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        app:hintTextAppearance="@android:color/black"
         app:errorEnabled="true">
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"

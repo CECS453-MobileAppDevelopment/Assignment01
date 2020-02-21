@@ -9,7 +9,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -18,9 +20,13 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String EXTRA_USERNAME = "com.example.assignment01.EXTRA_USERNAME";
+
     ArrayList<User> userList;
-    private EditText loginUsername, loginPassword;
-    private Button mbtnSignUp, mbtnLogin;
+    private TextInputLayout loginUsername;
+    private TextInputLayout loginPassword;
+    private Button mbtnSignUp;
+    private Button mbtnLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +49,14 @@ public class MainActivity extends AppCompatActivity {
         mbtnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                validateLogin();
-                startActivity(new Intent(MainActivity.this, LoggedInPage.class));
+                if (validateLogin()) {
+                    Intent intent = new Intent(MainActivity.this, LoggedInPage.class);
+                    intent.putExtra(EXTRA_USERNAME, loginUsername.getEditText().getText().toString());
+                    startActivity(intent);
+                } else {
+                    loginPassword.getEditText().getText().clear();
+                    Toast.makeText( getApplicationContext(), "Invalid Login", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -60,9 +72,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void validateLogin() {
-        for(User valid: userList) {
-            Log.d("userptyptptpt", valid.toString());
+    private boolean validateLogin() {
+        for(User user: userList) {
+            Log.d("userptyptptpt", user.toString());
+            if (loginUsername.getEditText().getText().toString().equals(user.getUsername())
+                    && loginPassword.getEditText().getText().toString().equals(user.getPassword())) {
+                //correct login
+                return true;
+            }
         }
+        return false;
     }
 }
