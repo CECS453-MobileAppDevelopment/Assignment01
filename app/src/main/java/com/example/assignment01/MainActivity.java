@@ -51,7 +51,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (validateLogin()) {
                     Intent intent = new Intent(MainActivity.this, LoggedInPage.class);
-                    intent.putExtra(EXTRA_USERNAME, loginUsername.getEditText().getText().toString());
+                    //username sent to logged in activity
+                    intent.putExtra(EXTRA_USERNAME, loginUsername.getEditText().getText().toString().trim());
                     startActivity(intent);
                 } else {
                     loginPassword.getEditText().getText().clear();
@@ -61,26 +62,28 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /* Loads current list of current users
+     *  Uses a JSON file to pull users locally */
     private void loadUsers() {
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
-        Gson gson = new Gson();
+        Gson gson = new Gson(); //parser for json file
         String json = sharedPreferences.getString("user list", null);
         Type type = new TypeToken<ArrayList<User>>() {}.getType();
         userList = gson.fromJson(json, type);
         if (userList == null) {
             userList = new ArrayList<>();
-        }
+        } //create arraylist if not already existing
     }
 
+    /* Validates login credentials with current users */
     private boolean validateLogin() {
         for(User user: userList) {
-            Log.d("userptyptptpt", user.toString());
-            if (loginUsername.getEditText().getText().toString().equals(user.getUsername())
+            Log.d("UserPrint", user.toString());
+            if (loginUsername.getEditText().getText().toString().trim().equals(user.getUsername())
                     && loginPassword.getEditText().getText().toString().equals(user.getPassword())) {
-                //correct login
-                return true;
+                return true; //valid login
             }
         }
-        return false;
+        return false; //invalid login
     }
 }

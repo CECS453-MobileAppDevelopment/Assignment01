@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -46,16 +47,23 @@ public class SignUpPage extends AppCompatActivity {
         mbtnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                validateInput();
-
+                if (validateInput()) {
+                    Toast.makeText(getApplicationContext(), "User Registered", Toast.LENGTH_SHORT).show();
+                    addUser();
+                    startActivity(new Intent(SignUpPage.this, MainActivity.class));
+                }
             }
         });
     }
 
+    /* Validates the username field for sign up */
     private boolean validateUsername() {
         String username = signupUsername.getEditText().getText().toString().trim();
         if(username.isEmpty()) {
             signupUsername.setError("Field can't be empty");
+            return false;
+        } else if (!uniqueUsername()) {
+            signupUsername.setError("Username is taken");
             return false;
         } else {
             signupUsername.setError(null);
@@ -63,13 +71,23 @@ public class SignUpPage extends AppCompatActivity {
         }
     }
 
-    //TODO: add validation for strength and count
+    /* Validates the username field for uniqueness */
+    private boolean uniqueUsername() {
+        for(User user: userList) {
+            if (signupUsername.getEditText().getText().toString().equals(user.getUsername())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /* Validates the password field for sign up */
     private boolean validatePassword() {
         String password = signupPassword.getEditText().getText().toString().trim();
         String passwordCheck = signupPasswordCheck.getEditText().getText().toString().trim();
         if(password.isEmpty()) {
             signupPassword.setError("Field can't be empty");
-            signupPasswordCheck.setError(null);
+            signupPasswordCheck.setError("Field must match ");
             return false;
         } else if (passwordCheck.isEmpty()) {
             signupPassword.setError(null);
@@ -86,6 +104,7 @@ public class SignUpPage extends AppCompatActivity {
         }
     }
 
+    /* Validates the email field for sign up */
     private boolean validateEmail() {
         String email = signupEmail.getEditText().getText().toString().trim();
         if(email.isEmpty()) {
@@ -100,6 +119,7 @@ public class SignUpPage extends AppCompatActivity {
         }
     }
 
+    /* Validates the phone field for sign up */
     private boolean validatePhone() {
         String regexPhone = "^[0-9]+$";
         String phone = signupPhone.getEditText().getText().toString().trim();
@@ -115,15 +135,16 @@ public class SignUpPage extends AppCompatActivity {
         }
     }
 
-    private void validateInput() {
+    /* Validates all fields for sign up */
+    private boolean validateInput() {
         if(!validateUsername() | !validatePassword() | !validateEmail() | !validatePhone()) {
-            return;
+            return false;
         }
-        Toast.makeText(getApplicationContext(), "Input valid", Toast.LENGTH_SHORT).show();
-        addUser();
-        startActivity(new Intent(SignUpPage.this, MainActivity.class));
+        return true;
     }
 
+    /* Creates a new user based on input fields
+    *  Stores new users into a JSON file locally */
     private void addUser() {
         User user = new User(signupUsername.getEditText().getText().toString(),
                              signupPassword.getEditText().getText().toString(),
@@ -138,14 +159,16 @@ public class SignUpPage extends AppCompatActivity {
         editor.apply();
     }
 
+    /* Loads current list of current users
+    *  Uses a JSON file to pull users locally */
     private void loadUsers() {
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
-        Gson gson = new Gson();
+        Gson gson = new Gson(); //parser for json file
         String json = sharedPreferences.getString("user list", null);
         Type type = new TypeToken<ArrayList<User>>() {}.getType();
         userList = gson.fromJson(json, type);
         if (userList == null) {
             userList = new ArrayList<>();
-        }
+        } //create arraylist if not already existing
     }
 }

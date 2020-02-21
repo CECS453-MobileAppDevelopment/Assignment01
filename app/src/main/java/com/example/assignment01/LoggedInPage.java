@@ -18,6 +18,7 @@ public class LoggedInPage extends AppCompatActivity {
         loggedInUsername = findViewById(R.id.logged_in_username);
 
         Intent intent = getIntent();
+        //username taken from log in page
         String username = intent.getStringExtra(MainActivity.EXTRA_USERNAME);
         loggedInUsername.setText(" " + username + "!");
     }
