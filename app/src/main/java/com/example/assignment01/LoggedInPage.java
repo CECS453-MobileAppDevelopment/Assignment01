@@ -15,10 +15,10 @@ public class LoggedInPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logged_in_page);
 
-        loggedInUsername = (TextView) findViewById(R.id.logged_in_username);
+        loggedInUsername = findViewById(R.id.logged_in_username);
 
         Intent intent = getIntent();
         String username = intent.getStringExtra(MainActivity.EXTRA_USERNAME);
-        loggedInUsername.setText(username);
+        loggedInUsername.setText(" " + username + "!");
     }
 }
